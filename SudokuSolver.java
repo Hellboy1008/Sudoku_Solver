@@ -10,6 +10,7 @@ public class SudokuSolver {
     private static int solution[][] = new int[9][9];
     private static ArrayList[][] pencilMarks = new ArrayList[9][9];
     private static ArrayList[][] tempPencilMarks = new ArrayList[9][9];
+    private static int[][] pencilMarkIndex = new int[9][9];
     private static final int[] digits = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     private static final int boxLength = 3;
 
@@ -78,9 +79,25 @@ public class SudokuSolver {
             }
         }
 
-        // solve the sudoku board
-        while (solved == false) {
+        // create pencil marks
+        int counter = 0;
+        while (counter < 15) {
             createPencilMarks();
+            counter++;
+        }
+        /*
+         * Tester: System.out.println(Arrays.toString(pencilMarks[0]));
+         * System.out.println(Arrays.toString(pencilMarks[1]));
+         * System.out.println(Arrays.toString(pencilMarks[2]));
+         * System.out.println(Arrays.toString(pencilMarks[3]));
+         * System.out.println(Arrays.toString(pencilMarks[4]));
+         * System.out.println(Arrays.toString(pencilMarks[5]));
+         * System.out.println(Arrays.toString(pencilMarks[6]));
+         * System.out.println(Arrays.toString(pencilMarks[7]));
+         * System.out.println(Arrays.toString(pencilMarks[8]));
+         */
+        // solve the sudoku board or check if it is already solved
+        while (solved == false) {
 
             // check if the sudoku is solved
             solved = true;
@@ -91,6 +108,9 @@ public class SudokuSolver {
                     }
                 }
             }
+
+            // brute force algorithm
+            boolean violation = false;
         }
     }
 
@@ -113,6 +133,7 @@ public class SudokuSolver {
                 }
                 if (pencilMarks[row][col].size() == 1) {
                     solution[row][col] = (int) pencilMarks[row][col].get(0);
+                    pencilMarks[row][col] = null;
                 }
             }
         }
