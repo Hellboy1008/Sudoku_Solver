@@ -13,10 +13,13 @@ public class SudokuSolver {
     private static int[][] pencilMarkIndex = new int[9][9];
     private static final int[] DIGITS = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     private static final int BOX_LENGTH = 3;
+    private static final int PENCIL_MARK_COUNTER = 15;
+    private static final int BOARD_SIZE = 9;
+    private static final double SECONDS_FACTOR = 1000000000;
 
     public static void main(String[] args) {
         boolean correctBoard = false;
-        int sudokuBoard[][] = new int[9][9];
+        int sudokuBoard[][] = new int[BOARD_SIZE][BOARD_SIZE];
         Scanner scanInput = new Scanner(System.in);
 
         // get user input for the sudoku board
@@ -63,7 +66,7 @@ public class SudokuSolver {
             }
             System.out.println();
         }
-        System.out.println("Time Taken:" + timeTaken / 1000000000 + " seconds");
+        System.out.println("Time Taken:" + timeTaken / SECONDS_FACTOR + " seconds");
     }
 
     // solves the sudoku board
@@ -81,7 +84,7 @@ public class SudokuSolver {
 
         // create pencil marks
         int counter = 0;
-        while (counter < 15) {
+        while (counter < PENCIL_MARK_COUNTER) {
             createPencilMarks();
             counter++;
         }
