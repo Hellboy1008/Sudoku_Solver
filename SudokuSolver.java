@@ -11,8 +11,8 @@ public class SudokuSolver {
     private static ArrayList[][] pencilMarks = new ArrayList[9][9];
     private static ArrayList[][] tempPencilMarks = new ArrayList[9][9];
     private static int[][] pencilMarkIndex = new int[9][9];
-    private static final int[] digits = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-    private static final int boxLength = 3;
+    private static final int[] DIGITS = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    private static final int BOX_LENGTH = 3;
 
     public static void main(String[] args) {
         boolean correctBoard = false;
@@ -143,8 +143,8 @@ public class SudokuSolver {
     public static ArrayList<Integer> checkConditions(int itemRow, int itemCol) {
         // initialise the pencil marks
         ArrayList<Integer> possibleNumbers = new ArrayList<Integer>();
-        for (int index = 0; index < digits.length; index++) {
-            possibleNumbers.add(digits[index]);
+        for (int index = 0; index < DIGITS.length; index++) {
+            possibleNumbers.add(DIGITS[index]);
         }
 
         // Check Row
@@ -162,10 +162,10 @@ public class SudokuSolver {
         }
 
         // Check Box
-        int boxRow = (itemRow / boxLength) * boxLength;
-        int boxColumn = (itemCol / boxLength) * boxLength;
-        for (int row = boxRow; row < boxRow + boxLength; row++) {
-            for (int col = boxColumn; col < boxColumn + boxLength; col++) {
+        int boxRow = (itemRow / BOX_LENGTH) * BOX_LENGTH;
+        int boxColumn = (itemCol / BOX_LENGTH) * BOX_LENGTH;
+        for (int row = boxRow; row < boxRow + BOX_LENGTH; row++) {
+            for (int col = boxColumn; col < boxColumn + BOX_LENGTH; col++) {
                 if (possibleNumbers.contains(solution[row][col])) {
                     possibleNumbers.remove((Integer) (solution[row][col]));
                 }
