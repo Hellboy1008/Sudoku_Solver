@@ -8,14 +8,21 @@ import java.util.Arrays;
 public class SudokuSolver {
 
     private static int solution[][] = new int[9][9];
+    private static int tempSolution[][] = new int[9][9];
     private static ArrayList[][] pencilMarks = new ArrayList[9][9];
-    private static ArrayList[][] tempPencilMarks = new ArrayList[9][9];
     private static int[][] pencilMarkIndex = new int[9][9];
     private static final int[] DIGITS = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     private static final int BOX_LENGTH = 3;
     private static final int PENCIL_MARK_COUNTER = 15;
     private static final int BOARD_SIZE = 9;
     private static final double SECONDS_FACTOR = 1000000000;
+    private static final char SPACE_CHAR = ' ';
+    private static final String INSTRUCTION = "Input Sudoku Board from top to bottom row by row"
+            + "\nRepresent Blanks with the number 0, don't use spaces";
+    private static final String MATCH_BOARD = "Does this Sudoku Board match your inputted board? (yes or no)";
+    private static final String YES = "yes";
+    private static final String SOLUTION = "The solution to your sudoku is:";
+    private static final String TIME_TAKEN = "Time Taken:%s seconds";
 
     public static void main(String[] args) {
         boolean correctBoard = false;
@@ -24,9 +31,7 @@ public class SudokuSolver {
 
         // get user input for the sudoku board
         while (correctBoard == false) {
-            System.out.println("Input Sudoku Board from top to bottom row by row");
-            System.out.println("Represent Blanks with the number 0, don't use spaces");
-
+            System.out.println(INSTRUCTION);
             // retrieve board
             for (int row = 0; row < sudokuBoard.length; row++) {
                 String wholeRow = scanInput.next();
@@ -35,44 +40,39 @@ public class SudokuSolver {
                 }
                 scanInput.nextLine();
             }
-
             // print board
             for (int row = 0; row < sudokuBoard.length; row++) {
                 for (int col = 0; col < sudokuBoard[0].length; col++) {
-                    System.out.print(sudokuBoard[row][col] + " ");
+                    System.out.print("" + sudokuBoard[row][col] + SPACE_CHAR);
                 }
                 System.out.println();
             }
-
             // check if user input matches the sudoku board they desire
-            System.out.println("Does this Sudoku Board match your inputted board? (yes or no)");
+            System.out.println(MATCH_BOARD);
             String answer = scanInput.next();
-            if (answer.equalsIgnoreCase("Yes")) {
+            if (answer.equalsIgnoreCase(YES)) {
                 correctBoard = true;
             }
         }
         scanInput.close();
-
         // solve sudoku and calculate the time taken
         double startTime = System.nanoTime();
         solveBoard(sudokuBoard);
         double timeTaken = System.nanoTime() - startTime;
-
         // print solution to sudoku
-        System.out.println("The solution to your sudoku is:");
+        System.out.println(SOLUTION);
         for (int row = 0; row < solution.length; row++) {
             for (int col = 0; col < solution[row].length; col++) {
-                System.out.print(solution[row][col] + " ");
+                System.out.print("" + solution[row][col] + SPACE_CHAR);
             }
             System.out.println();
         }
-        System.out.println("Time Taken:" + timeTaken / SECONDS_FACTOR + " seconds");
+        System.out.printf(TIME_TAKEN, timeTaken / SECONDS_FACTOR);
     }
 
     // solves the sudoku board
     private static void solveBoard(int[][] unsolvedBoard) {
         boolean solved = false;
-
         // populate solution array with known values
         for (int row = 0; row < unsolvedBoard.length; row++) {
             for (int col = 0; col < unsolvedBoard[row].length; col++) {
@@ -81,40 +81,46 @@ public class SudokuSolver {
                 }
             }
         }
-
         // create pencil marks
         int counter = 0;
         while (counter < PENCIL_MARK_COUNTER) {
             createPencilMarks();
             counter++;
         }
-        /*
-         * Tester: System.out.println(Arrays.toString(pencilMarks[0]));
-         * System.out.println(Arrays.toString(pencilMarks[1]));
-         * System.out.println(Arrays.toString(pencilMarks[2]));
-         * System.out.println(Arrays.toString(pencilMarks[3]));
-         * System.out.println(Arrays.toString(pencilMarks[4]));
-         * System.out.println(Arrays.toString(pencilMarks[5]));
-         * System.out.println(Arrays.toString(pencilMarks[6]));
-         * System.out.println(Arrays.toString(pencilMarks[7]));
-         * System.out.println(Arrays.toString(pencilMarks[8]));
-         */
-        // solve the sudoku board or check if it is already solved
-        while (solved == false) {
+        // check if the sudoku is solved
+        solved = true;
+        for (int row = 0; row < solution.length; row++) {
+            for (int col = 0; col < solution[0].length; col++) {
+                if (solution[row][col] == 0) {
+                    solved = false;
+                }
+            }
+        }
 
-            // check if the sudoku is solved
-            solved = true;
-            for (int row = 0; row < solution.length; row++) {
-                for (int col = 0; col < solution[0].length; col++) {
-                    if (solution[row][col] == 0) {
-                        solved = false;
+        // Tester:
+        System.out.println(Arrays.toString(pencilMarks[0]));
+        System.out.println(Arrays.toString(pencilMarks[1]));
+        System.out.println(Arrays.toString(pencilMarks[2]));
+        System.out.println(Arrays.toString(pencilMarks[3]));
+        System.out.println(Arrays.toString(pencilMarks[4]));
+        System.out.println(Arrays.toString(pencilMarks[5]));
+        System.out.println(Arrays.toString(pencilMarks[6]));
+        System.out.println(Arrays.toString(pencilMarks[7]));
+        System.out.println(Arrays.toString(pencilMarks[8]));
+
+        // solve the sudoku board or check if it is already solved
+        int run = 0;
+        do {
+            // brute force algorithm
+            for (int row = 0; row < pencilMarkIndex.length; row++) {
+                for (int col = 0; col < pencilMarkIndex.length; col++) {
+                    if (pencilMarks[row][col] != null) {
+                        solution[row][col] = (int) pencilMarks[row][col].get(pencilMarkIndex[row][col]);
                     }
                 }
             }
-
-            // brute force algorithm
-            boolean violation = false;
-        }
+            run++;
+        } while (solved == false);
     }
 
     // creating possible values for each empty cell
@@ -127,7 +133,6 @@ public class SudokuSolver {
                 }
             }
         }
-
         // update solution set
         for (int row = 0; row < pencilMarks.length; row++) {
             for (int col = 0; col < pencilMarks[row].length; col++) {
@@ -149,22 +154,20 @@ public class SudokuSolver {
         for (int index = 0; index < DIGITS.length; index++) {
             possibleNumbers.add(DIGITS[index]);
         }
-
-        // Check Row
+        // check row
         for (int col = 0; col < solution[itemRow].length; col++) {
             if (possibleNumbers.contains(solution[itemRow][col])) {
                 possibleNumbers.remove((Integer) (solution[itemRow][col]));
             }
         }
 
-        // Check Column
+        // check column
         for (int row = 0; row < solution.length; row++) {
             if (possibleNumbers.contains(solution[row][itemCol])) {
                 possibleNumbers.remove((Integer) (solution[row][itemCol]));
             }
         }
-
-        // Check Box
+        // check box
         int boxRow = (itemRow / BOX_LENGTH) * BOX_LENGTH;
         int boxColumn = (itemCol / BOX_LENGTH) * BOX_LENGTH;
         for (int row = boxRow; row < boxRow + BOX_LENGTH; row++) {
