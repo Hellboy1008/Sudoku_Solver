@@ -1,5 +1,10 @@
 
-//龍ONE
+/**
+ * Created by: 龍ONE
+ * Date Created: February 7, 2018
+ * Date Edited: June 28, 2020
+ * Purpose: To solve sudoku puzzles ranging in all levels, from beginner to expert.
+ */
 
 import java.util.Scanner;
 import java.util.ArrayList;
