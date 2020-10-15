@@ -1,2 +1,3 @@
-# ignore all class files
-*.class
+# ignore all pycache and vscode files
+*.vscode
+*__pycache__
