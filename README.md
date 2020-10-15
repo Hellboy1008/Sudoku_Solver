@@ -1,3 +1,3 @@
 # Sudoku_Solver
 
-Solves all Sudoku puzzles below expert level using simple Sudoku solving methods.
+Solves all sudoku puzzles using traditional sudoku solving methods and computation.
