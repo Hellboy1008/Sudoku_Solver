@@ -34,6 +34,15 @@ sudoku_board = [[int(char) for char in row] for row in sudoku_board]
 # run conventional solve 20 times
 for count in range(0, 20):
     pencilmarks.solveSudoku(sudoku_board)
+    # loop through board to see if solved
+    solved = True
+    for row in sudoku_board:
+        # check if there are unsolved numbers in the sudoku
+        if 0 in row:
+            solved = False
+    # check if solved
+    if solved == True:
+        break
 
 # loop through sudoku board to check if solved
 solved = True
