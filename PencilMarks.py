@@ -48,6 +48,30 @@ def checkRules(sudoku, pencil_marks):
     return pencil_marks
 
 
+def checkUnique(sudoku, pencil_marks):
+    # check unique values in row, column, and box and changes puzzle directly
+
+    # check row
+    for row_index, row in enumerate(pencil_marks):
+        numbers_count = [0] * 9
+        # loop through each pencil mark in the row
+        for values in row:
+            # loop through each value in pencil marks
+            for num in values:
+                numbers_count[num - 1] += 1
+        # loop through the number count
+        for count_val_index, count_val in enumerate(numbers_count):
+            if count_val == 1:
+                # loop through all values again
+                for values_index, values in enumerate(row):
+                    # find the pencil mark with that value
+                    if (count_val_index + 1) in values:
+                        sudoku[row_index][values_index] = count_val_index + 1
+                        row[values_index] = []
+
+    # check column
+
+
 def createPencilMarks(sudoku):
     # creates pencil marks for given sudoku board
     pencil_marks = []
@@ -67,8 +91,6 @@ def createPencilMarks(sudoku):
     # remove pencil marks by checking rules
     pencil_marks = checkRules(sudoku, pencil_marks)
 
-    # remove pencil marks by checking unique values
-
     return pencil_marks
 
 
@@ -76,7 +98,10 @@ def solveSudoku(sudoku):
     # solves sudoku puzzle using pencil marks
     pencil_marks = createPencilMarks(sudoku)
 
-    # loop through rows in pencil marks
+    # fill in sudoku by checking unique values
+    checkUnique(sudoku, pencil_marks)
+
+    # fill in sudoku by checking single values
     for row_index, row in enumerate(pencil_marks):
         for col_index, col in enumerate(row):
             if len(col) == 1:
