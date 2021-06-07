@@ -1,3 +1,3 @@
 # Sudoku_Solver
 
-Solves all sudoku puzzles using traditional sudoku solving methods and computation.
+Solves any types of sudoku puzzles using traditional sudoku solving methods and computation.
