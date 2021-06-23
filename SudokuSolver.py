@@ -1,62 +1,64 @@
 # Created by: 龍ONE
 # Date Created: October 14, 2020
-# Date Edited: October 23, 2020
+# Date Edited: June 22, 2021
 # Purpose: To solve sudoku puzzles ranging in all levels, from beginner to expert.
 
-# import other python files
+# import pencil mark file
 import PencilMarks as pencilmarks
-import BruteForce as bruteforce
 
-# ask for user input
-valid_board = False
-while valid_board == False:
-    sudoku_board = []
-    print('Input the sudoku board from the top row to the bottom row. \nRepresent blanks with the number 0 and leave no spaces between each number.')
-    # ask for values in each row
-    for row in range(1, 10):
-        input_row = input('Row ' + str(row) + ': \n')
-        sudoku_board.append(input_row.strip())
-    # check to make sure user input was valid
-    for row in sudoku_board:
-        # check if each row has 9 numbers and check that the numbers are between 0-9
-        if len(row) == 9 and row.isdigit():
-            valid_board = True
-        else:
-            valid_board = False
-            break
-    # if the board was invalid, ask user to input again
-    if valid_board == False:
-        print('There was something from with your input. Please try again.\n')
 
-# covert sudoku board to proper two-dimensional structure
-sudoku_board = [[int(char) for char in row] for row in sudoku_board]
+def checkSolved(board):
+    """ Check if sudoku board is solved
 
-# run conventional solve 20 times
-for count in range(0, 20):
-    pencilmarks.solveSudoku(sudoku_board)
-    # loop through board to see if solved
-    solved = True
-    for row in sudoku_board:
-        # check if there are unsolved numbers in the sudoku
+    Args:
+        board (list): Sudoku board
+
+    Returns:
+        [boolean]: True if sudoku is solved, false otherwise
+    """
+    for row in board:
         if 0 in row:
-            solved = False
-    # check if solved
-    if solved == True:
-        break
+            return False
+    return True
 
-# loop through sudoku board to check if solved
-solved = True
-for row in sudoku_board:
-    # check if there are unsolved numbers in the sudoku
-    if 0 in row:
-        solved = False
 
-# if sudoku board is not solved, run brute force algorithm
-if solved == False:
-    print('ERROR')
+def main():
+    """ Main method for extracting user input for sudoku board and running main solver.
+    """
+    valid_board = False
+    # ask user to input sudoku board
+    while not valid_board:
+        sudoku_board = []
+        print('Input the sudoku board from the top row to the bottom row. \nRepresent blanks with the number 0 and leave no spaces between each number.')
+        # ask for the numbers in each row
+        for row in range(1, 10):
+            user_input = input('Row ' + str(row) + ':\n')
+            sudoku_board.append(user_input.strip())
+        # check to make sure board is valid
+        for row in sudoku_board:
+            valid_board = True if len(row) == 9 and row.isdigit() else False
+            if not valid_board:
+                break
+        # send error message is sudoku board was not valid
+        if not valid_board:
+            print("There was something wrong with your input, please try again.\n")
+    # convert sudoku to proper two-dimensional list with integers
+    sudoku_board = [[int(char) for char in row] for row in sudoku_board]
+    # solve sudoku
+    solveSudoku(sudoku_board)
 
-# print solution for sudoku board
-print('\nSolution for sudoku board:\n')
-sudoku_board = [[str(num) for num in row] for row in sudoku_board]
-for row in sudoku_board:
-    print("".join(row))
+
+def solveSudoku(board):
+    # current and maximum iterations for solving
+    current_iter = 0
+    max_iter = 500
+    # initialize pencil marks
+    pencil_marks = pencilmarks.initializePencilMarks()
+    # solve sudoku
+    while current_iter < max_iter:
+        current_iter += 1
+
+
+# run main method for program
+if __name__ == "__main__":
+    main()

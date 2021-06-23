@@ -1,7 +1,38 @@
 # Created by: 龍ONE
 # Date Created: October 14, 2020
-# Date Edited: October 23, 2020
+# Date Edited: June 22, 2021
 # Purpose: Holds functions for creating and manipulating pencil marks in sudoku puzzle.
+
+
+def getRow(board, row):
+    return 0
+
+
+def getColumn(board, column):
+    return 0
+
+
+def getBox(board, column, row):
+    return 0
+
+
+def initializePencilMarks():
+    """ Initialize pencil marks for a new sudoku board
+
+    Args:
+        board (list): Sudoku board
+
+    Returns:
+        [list]: Default pencil marks for sudoku board
+    """
+    pencil_marks = [[[1, 2, 3, 4, 5, 6, 7, 8, 9]
+                     for column in range(9)] for row in range(9)]
+
+    return pencil_marks
+
+def updatePencilMarks(board, pencil_marks):
+    
+    return pencil_marks
 
 
 def checkRules(sudoku, pencil_marks):
@@ -70,28 +101,6 @@ def checkUnique(sudoku, pencil_marks):
                         row[values_index] = []
 
     # check column
-
-
-def createPencilMarks(sudoku):
-    # creates pencil marks for given sudoku board
-    pencil_marks = []
-
-    # fill default pencil marks for each row
-    for row_index, row in enumerate(sudoku):
-        pencil_marks.append([])
-        # loop through all values in each row
-        for value_index, value in enumerate(row):
-            pencil_marks[row_index].append([])
-            # add pencil marks if the value is 0
-            if value == 0:
-                # add all numbers from 1 to 9
-                for num in range(1, 10):
-                    pencil_marks[row_index][value_index].append(num)
-
-    # remove pencil marks by checking rules
-    pencil_marks = checkRules(sudoku, pencil_marks)
-
-    return pencil_marks
 
 
 def solveSudoku(sudoku):
