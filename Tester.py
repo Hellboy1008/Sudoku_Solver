@@ -23,4 +23,4 @@ solutions = [[[int(char) for char in row] for row in solution] for solution in s
 for index, test in enumerate(tests):
     solved_board = solver.solveSudoku(test)
     if solved_board == solutions[index]:
-        print("Test", index + 1, "Succeed")
+        print("Test", index + 1, "Successful")
