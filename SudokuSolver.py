@@ -1,25 +1,10 @@
 # Created by: 龍ONE
 # Date Created: October 14, 2020
-# Date Edited: June 22, 2021
+# Date Edited: September 30, 2021
 # Purpose: To solve sudoku puzzles ranging in all levels, from beginner to expert.
 
 # import pencil mark file
 import PencilMarks as pencilmarks
-
-
-def checkSolved(board):
-    """ Check if sudoku board is solved
-
-    Args:
-        board (list): Sudoku board
-
-    Returns:
-        [boolean]: True if sudoku is solved, false otherwise
-    """
-    for row in board:
-        if 0 in row:
-            return False
-    return True
 
 
 def main():
@@ -39,7 +24,7 @@ def main():
             valid_board = True if len(row) == 9 and row.isdigit() else False
             if not valid_board:
                 break
-        # send error message is sudoku board was not valid
+        # send error message if sudoku board was not valid
         if not valid_board:
             print("There was something wrong with your input, please try again.\n")
     # convert sudoku to proper two-dimensional list with integers
@@ -49,14 +34,17 @@ def main():
 
 
 def solveSudoku(board):
-    # current and maximum iterations for solving
-    current_iter = 0
-    max_iter = 500
+    """ Solve sudoku using methods in PencilMarks.py
+
+    Args:
+        board (list): Sudoku board
+    """
     # initialize pencil marks
-    pencil_marks = pencilmarks.initializePencilMarks()
+    pencil_marks = pencilmarks.initializePencilMarks(board)
     # solve sudoku
-    while current_iter < max_iter:
-        current_iter += 1
+    pencilmarks.solve(board, pencil_marks)
+    
+    return board
 
 
 # run main method for program
