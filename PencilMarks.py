@@ -1,53 +1,9 @@
 # Created by: 龍ONE
 # Date Created: October 14, 2020
-# Date Edited: November 3, 2022
+# Date Edited: November 7, 2022
 # Purpose: Holds functions for creating and manipulating pencil marks in sudoku puzzle.
 
 import copy
-
-'''
-
-def hiddenSingles(board, pencil_marks):
-    """ Find hidden singles for the sudoku board.
-        Hidden singles are boxes that can only contain
-        one single digit in each row, column, or box
-        per the pencil marks.
-
-    Args:
-        board (list): Sudoku board
-        pencil_marks (list): Pencil marks for sudoku board
-    """
-    # check rows
-    for index_i, row in enumerate(pencil_marks):
-        digits = dict()
-        singles = []
-        # count how many times each digit appears in row
-        for mark in row:
-            for num in mark:
-                if num not in digits:
-                    digits[num] = 1
-                else:
-                    digits[num] += 1
-        # search to see if there are any hidden singles
-        for num in digits:
-            if digits[num] == 1:
-                singles.append(num)
-        # fill board with hidden singles
-        if len(singles) != 0:
-            for index_j, mark in enumerate(row):
-                for digit in singles:
-                    if digit in mark:
-                        board[index_i][index_j] = digit
-                        pencil_marks[index_i][index_j] = []
-
-    # check columns
-
-    # check boxes
-
-    return 0
-    
-'''
-
 
 def checkSolved(board):
     """ Check if sudoku board is solved
@@ -231,6 +187,8 @@ def initializePencilMarks(board):
 
     return pencil_marks
 
+def obviousPairs(board, pencil_marks):
+    return 0
 
 def obviousSingles(board, pencil_marks):
     """ Find obvious singles for the sudoku board.
