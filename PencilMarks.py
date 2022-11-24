@@ -1,9 +1,11 @@
 # Created by: 龍ONE
 # Date Created: October 14, 2020
-# Date Edited: November 7, 2022
-# Purpose: Holds functions for creating and manipulating pencil marks in sudoku puzzle.
+# Date Edited: November 23, 2022
+# Purpose: Holds functions for creating and manipulating
+#          pencil marks in sudoku puzzle.
 
 import copy
+
 
 def checkSolved(board):
     """ Check if sudoku board is solved
@@ -31,11 +33,42 @@ def convertToBox(arr):
     """
     # convert arr into box
     box_arr = []
-    for index_i in range(0, 9, 3):
-        for index_j in range(0, 9, 3):
-            box_arr.append([arr[index_i][index_j], arr[index_i][index_j+1], arr[index_i][index_j+2], arr[index_i+1][index_j], arr[index_i+1]
-                           [index_j+1], arr[index_i+1][index_j+2], arr[index_i+2][index_j], arr[index_i+2][index_j+1], arr[index_i+2][index_j+2]])
+    for r_index in range(0, 9, 3):
+        for c_index in range(0, 9, 3):
+            box_arr.append([arr[r_index][c_index], arr[r_index][c_index+1],
+                            arr[r_index][c_index+2], arr[r_index+1][c_index],
+                            arr[r_index+1][c_index+1],
+                            arr[r_index+1][c_index+2],
+                            arr[r_index+2][c_index], arr[r_index+2][c_index+1],
+                            arr[r_index+2][c_index+2]])
     return box_arr
+
+
+def findPairs(arr, obvious):
+    """ Returns a list of pairs in an array of arrays
+
+    Args:
+        arr (list): Rows/Columns/Boxes of pencil marks
+        obvious (boolean): Whether we are finding obvious or hidden pairs
+
+    Returns:
+        [list]: List of pairs in the array
+    """
+    pair_list = []
+    # find obvious pairs
+    if obvious:
+        pairs = {}
+        for mark in arr:
+            if len(mark) == 2 and str(mark) in pairs:
+                pairs[str(mark)][1] += 1
+            elif len(mark) == 2:
+                pairs[str(mark)] = [mark, 1]
+        for p_mark in pairs:
+            if pairs[p_mark][1] == 2:
+                pair_list.append(pairs[p_mark][0])
+
+    return pair_list
+
 
 def findUnique(arr):
     """ Returns a unique value in an array of arrays
@@ -49,19 +82,19 @@ def findUnique(arr):
     """
     # fill dictionary with pencil marks
     dict_values = {}
-    for index, mark in enumerate(arr):
+    for m_index, mark in enumerate(arr):
         for value in mark:
             if value not in dict_values:
-                dict_values[value] = [index]
+                dict_values[value] = [m_index]
             else:
-                dict_values[value].append(index)
-        
+                dict_values[value].append(m_index)
+
     # determine unique value in array
     unique = []
     for key in dict_values:
         if len(dict_values[key]) == 1:
             unique.append((key, dict_values[key][0]))
-                                                                                                    
+
     return unique
 
 
@@ -77,8 +110,8 @@ def getBox(arr, num):
     """
     # convert arr into box
     arr_box = convertToBox(arr)
-    for index, box in enumerate(arr_box):
-        if index == num:
+    for b_index, box in enumerate(arr_box):
+        if b_index == num:
             return box
 
 
@@ -94,8 +127,8 @@ def getColumn(arr, num):
     """
     # transpose arr
     arr_transpose = list(zip(*copy.deepcopy(arr)))
-    for index, column in enumerate(arr_transpose):
-        if index == num:
+    for c_index, column in enumerate(arr_transpose):
+        if c_index == num:
             return list(column)
 
 
@@ -110,9 +143,10 @@ def getRow(arr, num):
         [list]: Specified row from array
     """
     # return specified row
-    for index, row in enumerate(arr):
-        if index == num:
+    for r_index, row in enumerate(arr):
+        if r_index == num:
             return row
+
 
 def hiddenSingles(board, pencil_marks):
     """ Find hidden singles for the sudoku board.
@@ -124,27 +158,32 @@ def hiddenSingles(board, pencil_marks):
         pencil_marks (list): Pencil marks for sudoku board
     """
     # iterate rows to find hidden singles
-    for row in range(0,9):
+    for row in range(0, 9):
         unique = findUnique(getRow(pencil_marks, row))
         for value in unique:
             board[row][value[1]] = value[0]
             pencil_marks[row][value[1]] = []
             updatePencilMarks(value[1], value[0], pencil_marks, row)
-            
+
     # iterate columns to find hidden singles
-    for col in range(0,9):
+    for col in range(0, 9):
         unique = findUnique(getColumn(pencil_marks, col))
         for value in unique:
             board[value[1]][col] = value[0]
             pencil_marks[value[1]][col] = []
             updatePencilMarks(col, value[0], pencil_marks, value[1])
-        
+
     # iterate boxes to find hidden singles
-    for box in range(0,9):
+    for box in range(0, 9):
         unique = findUnique(getBox(pencil_marks, box))
-        print("XDD", unique)
-        print(getBox(pencil_marks, box))   
+        for value in unique:
+            box_row = box // 3 * 3 + value[1] // 3
+            box_col = box % 3 * 3 + value[1] % 3
+            board[box_row][box_col] = value[0]
+            pencil_marks[box_row][box_col] = []
+            updatePencilMarks(box_col, value[0], pencil_marks, box_row)
     return 0
+
 
 def initializePencilMarks(board):
     """ Initialize pencil marks for a new sudoku board
@@ -158,37 +197,54 @@ def initializePencilMarks(board):
 
     # initialize pencil mark with all digits
     pencil_marks = [[[1, 2, 3, 4, 5, 6, 7, 8, 9]
-                     if board[row][column] == 0 else [] for column in range(9)] for row in range(9)]
+                     if board[row][column] == 0 else []
+                     for column in range(9)] for row in range(9)]
 
-    print("ROWS:")
     # eliminate unnecessary pencil marks from rows
-    for index in range(0, 9):
-        row = getRow(pencil_marks, index)
-        setRow([[num for num in mark if num not in getRow(board, index)]
-                for mark in row], index, pencil_marks)
-    for row in pencil_marks:
-        print(row)
-    print("COLUMNS:")
+    for r_index in range(0, 9):
+        row = getRow(pencil_marks, r_index)
+        setRow([[num for num in mark if num not in getRow(board, r_index)]
+                for mark in row], r_index, pencil_marks)
+
     # eliminate unnecessary pencil marks from columns
-    for index in range(0, 9):
-        column = getColumn(pencil_marks, index)
-        setColumn([[num for num in mark if num not in getColumn(board, index)]
-                   for mark in column], index, pencil_marks)
-    for row in pencil_marks:
-        print(row)
-    print("BOXES:")
+    for c_index in range(0, 9):
+        column = getColumn(pencil_marks, c_index)
+        setColumn([[num for num in mark if num not in getColumn(board, c_index)]
+                   for mark in column], c_index, pencil_marks)
+
     # eliminate unnecessary pencil marks from boxes
-    for index in range(0, 9):
-        box = getBox(pencil_marks, index)
-        setBox([[num for num in mark if num not in getBox(board, index)]
-                for mark in box], index, pencil_marks)
-    for row in pencil_marks:
-        print(row)
+    for b_index in range(0, 9):
+        box = getBox(pencil_marks, b_index)
+        setBox([[num for num in mark if num not in getBox(board, b_index)]
+                for mark in box], b_index, pencil_marks)
 
     return pencil_marks
 
+
 def obviousPairs(board, pencil_marks):
+    """ Find obvious pairs for the sudoku board.
+        Obvious pairs are two boxes in the same row,
+        column, or box that can only contain the same two digits 
+        in the pencil marks.
+
+    Args:
+        board (list): Sudoku board
+        pencil_marks (list): Pencil marks for sudoku board
+    """
+    # iterate rows to find obvious pairs
+    for r_index, row in enumerate(pencil_marks):
+        pair_list = findPairs(row, True)
+        if len(pair_list) != 0:
+            for pair in pair_list:
+                for c_index, col in enumerate(row):
+                    if col != pair:
+                        pencil_marks[r_index][c_index] = [
+                            val for val in col if val not in pair]
+        print(pair_list)
+        print('ROWS\n', row)
+
     return 0
+
 
 def obviousSingles(board, pencil_marks):
     """ Find obvious singles for the sudoku board.
@@ -200,12 +256,12 @@ def obviousSingles(board, pencil_marks):
         pencil_marks (list): Pencil marks for sudoku board
     """
     # search for one length pencil marks
-    for index_i, row in enumerate(pencil_marks):
-        for index_j, mark in enumerate(row):
+    for r_index, row in enumerate(pencil_marks):
+        for c_index, mark in enumerate(row):
             if len(mark) == 1:
-                board[index_i][index_j] = mark[0]
-                pencil_marks[index_i][index_j] = []
-                updatePencilMarks(index_j, mark[0], pencil_marks, index_i)
+                board[r_index][c_index] = mark[0]
+                pencil_marks[r_index][c_index] = []
+                updatePencilMarks(c_index, mark[0], pencil_marks, r_index)
 
 
 def setBox(new_arr, num, pencil_marks):
@@ -222,13 +278,13 @@ def setBox(new_arr, num, pencil_marks):
     # change pencil marks to box
     pencil_marks_box = convertToBox(pencil_marks)
     # change specified box
-    for index in range(len(pencil_marks_box)):
-        if index == num:
-            pencil_marks_box[index] = new_arr
+    for b_index in range(len(pencil_marks_box)):
+        if b_index == num:
+            pencil_marks_box[b_index] = new_arr
     # replace old pencil marks with new pencil marks
     new_pencil_marks = convertToBox(pencil_marks_box)
-    for index in range(len(pencil_marks)):
-        pencil_marks[index] = new_pencil_marks[index]
+    for pm_index in range(len(pencil_marks)):
+        pencil_marks[pm_index] = new_pencil_marks[pm_index]
 
 
 def setColumn(new_arr, num, pencil_marks):
@@ -245,14 +301,14 @@ def setColumn(new_arr, num, pencil_marks):
     # transpose pencil marks
     pencil_marks_transpose = list(zip(*copy.deepcopy(pencil_marks)))
     # change specified column
-    for index in range(len(pencil_marks_transpose)):
-        if index == num:
-            pencil_marks_transpose[index] = new_arr
+    for c_index in range(len(pencil_marks_transpose)):
+        if c_index == num:
+            pencil_marks_transpose[c_index] = new_arr
     # replace old pencil marks with new pencil marks
-    new_pencil_marks = list(list(mark)
-                            for mark in zip(*copy.deepcopy(pencil_marks_transpose)))
-    for index in range(len(pencil_marks)):
-        pencil_marks[index] = new_pencil_marks[index]
+    new_pencil_marks = list(list(mark) for mark in zip(
+        *copy.deepcopy(pencil_marks_transpose)))
+    for pm_index in range(len(pencil_marks)):
+        pencil_marks[pm_index] = new_pencil_marks[pm_index]
 
 
 def setRow(new_arr, num, pencil_marks):
@@ -267,9 +323,9 @@ def setRow(new_arr, num, pencil_marks):
         [list]: Updated pencil marks for sudoku board
     """
     # change specified row
-    for index in range(len(pencil_marks)):
-        if index == num:
-            pencil_marks[index] = new_arr
+    for r_index in range(len(pencil_marks)):
+        if r_index == num:
+            pencil_marks[r_index] = new_arr
 
 
 def solve(board, pencil_marks):
@@ -286,11 +342,12 @@ def solve(board, pencil_marks):
         hiddenSingles(board, pencil_marks)
         x += 1
         if x == 1000:
+            obviousPairs(board, pencil_marks)
             break
-    print("BOARD:")
+    print('BOARD:')
     for row in board:
         print(row)
-    print("PENCIL_MARKS:")
+    print('PENCIL_MARKS:')
     for row in pencil_marks:
         print(row)
 
@@ -315,5 +372,6 @@ def updatePencilMarks(col_index, num, pencil_marks, row_index):
     setColumn(new_col, col_index, pencil_marks)
     # update box
     new_box = [[val for val in box_val if val not in [num]]
-               for box_val in getBox(pencil_marks, row_index // 3 * 3 + col_index // 3)]
+               for box_val in
+               getBox(pencil_marks, row_index // 3 * 3 + col_index // 3)]
     setBox(new_box, row_index // 3 * 3 + col_index // 3, pencil_marks)
