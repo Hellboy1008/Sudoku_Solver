@@ -1,10 +1,12 @@
 # Created by: 龍ONE
 # Date Created: October 14, 2020
-# Date Edited: November 25, 2022
+# Date Edited: November 26, 2022
 # Purpose: Holds functions for creating and manipulating
 #          pencil marks in sudoku puzzle.
 
 import copy
+import time
+from PencilMark import PencilMark
 
 # constants
 GRID_SIZE = 9
@@ -364,14 +366,23 @@ def solve(board, pencil_marks):
         pencil_marks (list): Pencil marks for sudoku board
     """
     # solves sudoku puzzle using pencil marks
+    print('PENCIL_MARKS_I:')
+    for row in pencil_marks:
+        print(row)
+    pencil_m = PencilMark(board)
+    start_time = time.time()
     x = 0
     while not checkSolved(board):
+        # old time = TIME_TAKEN 0.016991138458251953 ROUNDS 4
         obviousSingles(board, pencil_marks)
         hiddenSingles(board, pencil_marks)
         obviousPairs(pencil_marks)
         x += 1
         if x == 1000:
             break
+    end_time = time.time()
+    print('TIME_TAKEN', end_time - start_time)
+    print("ROUNDS", x)
     print('BOARD:')
     for row in board:
         print(row)

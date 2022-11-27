@@ -1,17 +1,17 @@
 # Created by: 龍ONE
 # Date Created: October 14, 2020
-# Date Edited: November 23, 2022
+# Date Edited: November 26, 2022
 # Purpose: To solve sudoku puzzles ranging in all levels,
 #          from beginner to expert.
 
-# import pencil mark file
-import PencilMarks as pencilmarks
+# import pencil mark helper
+import PencilMarkHelper as pencilmarks
 
 
 def main():
-    """ Main method for extracting user input for sudoku board 
+    ''' Main method for extracting user input for sudoku board 
         and running main solver.
-    """
+    '''
     valid_board = False
     # ask user to input sudoku board
     while not valid_board:
@@ -39,11 +39,11 @@ def main():
 
 
 def solveSudoku(board):
-    """ Solve sudoku using methods in PencilMarks.py
+    ''' Solve sudoku using methods in PencilMarks.py
 
     Args:
         board (list): Sudoku board
-    """
+    '''
     # initialize pencil marks
     pencil_marks = pencilmarks.initializePencilMarks(board)
     # solve sudoku
@@ -53,5 +53,5 @@ def solveSudoku(board):
 
 
 # run main method for program
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
