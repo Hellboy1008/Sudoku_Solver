@@ -1,11 +1,12 @@
 # Created by: 龍ONE
 # Date Created: October 14, 2020
-# Date Edited: November 26, 2022
+# Date Edited: November 27, 2022
 # Purpose: To solve sudoku puzzles ranging in all levels,
 #          from beginner to expert.
 
-# import pencil mark helper
-import PencilMarkHelper as pencilmarks
+# import pencil mark and helper
+from PencilMark import PencilMark
+import PencilMarkHelper
 
 
 def main():
@@ -39,15 +40,16 @@ def main():
 
 
 def solveSudoku(board):
-    ''' Solve sudoku using methods in PencilMarks.py
+    ''' Solve sudoku using pencil marks and brute force
+        if necessary.
 
     Args:
         board (list): Sudoku board
     '''
     # initialize pencil marks
-    pencil_marks = pencilmarks.initializePencilMarks(board)
+    pencil_marks = PencilMark(board)
     # solve sudoku
-    pencilmarks.solve(board, pencil_marks)
+    PencilMarkHelper.solve(board, pencil_marks)
 
     return board
 

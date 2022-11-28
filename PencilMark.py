@@ -1,10 +1,7 @@
 # Created by: 龍ONE
 # Date Created: November 26, 2022
-# Date Edited: November 26, 2022
-# Purpose: Holds object used to solve sudoku board.
-
-import copy
-
+# Date Edited: November 27, 2022
+# Purpose: Pencilmark object used to solve sudoku board.
 
 class PencilMark:
 
@@ -41,7 +38,7 @@ class PencilMark:
                 [72, 73, 74, 75, 76, 77, 78, 79, 80]]
 
     def __init__(self, board):
-        ''' Initialize pencil marks for a new sudoku board
+        ''' Initialize pencil marks for a new sudoku board.
 
         Args:
             board (list): Sudoku board
@@ -66,9 +63,29 @@ class PencilMark:
                     self.updatePM(pm_count, board[r_index][c_index])
                 pm_count += 1
 
-        #self.printPM()
+    def getPMInfo(self, keys):
+        ''' Retrieve a dictionary provided pencil marks and their
+            positions given a set of keys (box, col, row).
+
+        Args:
+            keys (list): Keys to be searched
+
+        Returns:
+            pm_info (dict): Dictionary containing pencil mark
+                            information
+        '''
+        pm_info = {}
+        for key in keys:
+            for mark in self.pm[key]:
+                if mark not in pm_info:
+                    pm_info[mark] = [key]
+                else:
+                    pm_info[mark].append(key)
+        return pm_info
 
     def printPM(self):
+        ''' Print pencil marks.
+        '''
         print('PENCIL_MARKS:')
         for num in range(0, self.GRID_SIZE * self.GRID_SIZE):
             print(self.pm[num], end='')
@@ -77,26 +94,49 @@ class PencilMark:
                 continue
             print(', ', end='')
 
-    def updatePM(self, target_key, val):
+    def updatePM(self, target_key, val, changeBox=True,
+                 changeCol=True, changeRow=True, excludeKeys=[]):
+        ''' Update pencil marks given a value to be removed
+            and the location of that value.
+
+        Args:
+            target_key (int): Location of the value to be removed
+            val (int): Value to be removed from pencil marks
+            changeBox (boolean): Whether pencil marks in boxs should 
+                                 be changed, default value is True
+            changeCol (boolean): Whether pencil marks in columns should 
+                                 be changed, default value is True
+            changeRow (boolean): Whether pencil marks in rows should 
+                                 be changed, default value is True
+            excludeKeys (list): Keys to exclude from update
+        '''
         change_keys = []
         # get keys for corresponding box
-        for box in self.BOX_NUMS:
-            if target_key in box:
-                box_change_keys = box
-                break
-        change_keys.extend(box_change_keys)
+        if changeBox:
+            for box in self.BOX_NUMS:
+                if target_key in box:
+                    box_change_keys = box
+                    break
+            change_keys.extend(box_change_keys)
         # get keys for corresponding column
-        for col in self.COL_NUMS:
-            if target_key in col:
-                col_change_keys = col
-                break
-        change_keys.extend(col_change_keys)
+        if changeCol:
+            for col in self.COL_NUMS:
+                if target_key in col:
+                    col_change_keys = col
+                    break
+            change_keys.extend(col_change_keys)
         # get keys for corresponding row
-        for row in self.ROW_NUMS:
-            if target_key in row:
-                row_change_keys = row
-                break
-        change_keys.extend(row_change_keys)
+        if changeRow:
+            for row in self.ROW_NUMS:
+                if target_key in row:
+                    row_change_keys = row
+                    break
+            change_keys.extend(row_change_keys)
+
+        # exclude keys if needed
+        if len(excludeKeys) != 0:
+            change_keys = [key for key in change_keys
+                           if key not in excludeKeys]
 
         # remove value from pencil marks
         for key in change_keys:
