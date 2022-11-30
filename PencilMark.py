@@ -1,7 +1,7 @@
 # Created by: 龍ONE
 # Date Created: November 26, 2022
-# Date Edited: November 27, 2022
-# Purpose: Pencilmark object used to solve sudoku board.
+# Date Edited: November 29, 2022
+# Purpose: PencilMark object used to solve sudoku board.
 
 class PencilMark:
 
@@ -95,20 +95,29 @@ class PencilMark:
             print(', ', end='')
 
     def updatePM(self, target_key, val, changeBox=True,
-                 changeCol=True, changeRow=True, excludeKeys=[]):
+                 changeCol=True, changeRow=True, excludeKeys=[],
+                 getChanges=False):
         ''' Update pencil marks given a value to be removed
             and the location of that value.
 
         Args:
             target_key (int): Location of the value to be removed
             val (int): Value to be removed from pencil marks
-            changeBox (boolean): Whether pencil marks in boxs should 
+            changeBox (boolean): Whether pencil marks in boxes should 
                                  be changed, default value is True
             changeCol (boolean): Whether pencil marks in columns should 
                                  be changed, default value is True
             changeRow (boolean): Whether pencil marks in rows should 
                                  be changed, default value is True
-            excludeKeys (list): Keys to exclude from update
+            excludeKeys (list): Keys to exclude from update, default
+                                value is empty list
+            getChanges (boolean): Whether to return a list filled 
+                                  with keys and values before update, 
+                                  default value is True
+
+        Returns:
+            before_changes (list): Returns list of keys and values before
+                                   pencil marks were updated.\
         '''
         change_keys = []
         # get keys for corresponding box
@@ -139,5 +148,10 @@ class PencilMark:
                            if key not in excludeKeys]
 
         # remove value from pencil marks
+        before_changes = []
         for key in change_keys:
+            if getChanges and val in self.pm[key]:
+                before_changes.append((key, self.pm[key]))
             self.pm[key] = [mark for mark in self.pm[key] if mark != val]
+
+        return before_changes

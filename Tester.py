@@ -1,7 +1,7 @@
 # Created by: 龍ONE
 # Date Created: June 15, 2021
-# Date Edited: November 23, 2022
-# Purpose: Test the sudoku solver on puzzles of different difficulty levels.
+# Date Edited: November 29, 2022
+# Purpose: Test the sudoku solver with puzzles of different difficulty levels.
 
 import SudokuSolver as solver
 

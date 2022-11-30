@@ -1,6 +1,6 @@
 # Created by: 龍ONE
 # Date Created: October 14, 2020
-# Date Edited: November 27, 2022
+# Date Edited: November 29, 2022
 # Purpose: To solve sudoku puzzles ranging in all levels,
 #          from beginner to expert.
 
@@ -45,6 +45,9 @@ def solveSudoku(board):
 
     Args:
         board (list): Sudoku board
+
+    Returns:
+        board (list): Solved sudoku board
     '''
     # initialize pencil marks
     pencil_marks = PencilMark(board)
